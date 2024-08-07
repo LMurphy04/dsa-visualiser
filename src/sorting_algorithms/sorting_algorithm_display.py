@@ -4,20 +4,27 @@ import pygame
 from pygame import Surface
 from sorting_algorithms.sorting_visualiser import run_sorting_algorithm
 
+pygame.init()
+clock = pygame.time.Clock()
+
 with open(f"{os.path.dirname(__file__)}/sorting_algorithm_information.json") as json_file:
     sorting_algorithm_info = json.load(json_file)
 
-def render_sorting_algorithm_display(screen:Surface, previous_renderer, algorithm:str):
-    screen.fill((255, 0, 0))
-    pygame.display.update()
+def render_sorting_algorithm_display(screen:Surface, algorithm:str):
+    run = True
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
+    while run:
+        clock.tick(60)
+        screen.fill((255, 0, 0))
+        pygame.display.update()
 
-        if event.type == pygame.KEYDOWN:
-            if event.key==pygame.K_RETURN:
-                run_sorting_algorithm(screen, algorithm)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
 
-            if event.key==pygame.K_BACKSPACE:
-                return previous_renderer, [screen]
+            if event.type == pygame.KEYDOWN:
+                if event.key==pygame.K_RETURN:
+                    run_sorting_algorithm(screen, algorithm)
+
+                if event.key==pygame.K_BACKSPACE:
+                    run = False

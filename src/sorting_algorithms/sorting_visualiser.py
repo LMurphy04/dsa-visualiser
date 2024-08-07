@@ -28,6 +28,7 @@ BAR_WIDTH = SCREEN_WIDTH // n
 DISPLAY DATA AS BARS
 """
 def render_bars(bar_data:list, highlight:set=set(), highlight_colour:tuple=RED):
+    screen.fill(BLACK)
     for i in range(len(bar_data)):
         height = bar_data[i] * HEIGHT_AMPLIFIER
         bar_x_offset = BAR_WIDTH * i
@@ -38,16 +39,17 @@ def render_bars(bar_data:list, highlight:set=set(), highlight_colour:tuple=RED):
             colour = WHITE
 
         pygame.draw.rect(screen, colour, (bar_x_offset, SCREEN_HEIGHT - height, BAR_WIDTH, height))
-
-def GUI_handle_swap(bar_data:list, highlight:set=set(), highlight_colour:tuple=RED):
-    clock.tick(comparisons_per_second)
-    screen.fill(BLACK) #reset bars
-    render_bars(bar_data, highlight, highlight_colour)
     pygame.display.update()
+
+def comparison(bar_data:list=None, highlight:set=set(), highlight_colour:tuple=RED):
+    clock.tick(comparisons_per_second)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+
+    if bar_data:
+        render_bars(bar_data, highlight, highlight_colour)
 
 """
 SORTING ALGORITHMS
@@ -56,40 +58,43 @@ def selection_sort_min(data):
     for i in range(len(data) - 1):
         minimum = i
         for j in range(i + 1, len(data)):
+            comparison()
             if data[j] < data[minimum]:
                 minimum = j
         data[i], data[minimum] = data[minimum], data[i]
-        GUI_handle_swap(data, set([i, minimum]))
+        comparison(data, set([i, minimum]))
 
 def selection_sort_max(data):
     for i in range(len(data) - 1, 0, -1):
         maximum = i
         for j in range(i):
+            comparison()
             if data[j] > data[maximum]:
                 maximum = j
         data[i], data[maximum] = data[maximum], data[i]
-        GUI_handle_swap(data, set([i, maximum]))
+        comparison(data, set([i, maximum]))
 
 def bogo_sort(data):
     complete = False
     while not complete:
         complete = True
         for i in range(len(data) - 1):
+            comparison()
             if data[i] > data[i+1]:
                 complete = False
                 break
         if not complete: random.shuffle(data)
-        GUI_handle_swap(data, delay=0)
+        comparison(data, delay=0)
 
 def insertion_sort(data):
     for i in range(1, len(data)):
         key, index = data[i], i
         while index > 0 and key < data[index - 1]:
             data[index] = data[index - 1]
-            GUI_handle_swap(data, set([index, index-1]))
+            comparison(data, set([index, index-1]))
             index -= 1
         data[index] = key
-        GUI_handle_swap(data, set([index]))
+        comparison(data, set([index]))
 
 def bubble_sort_bottom_to_top(data):
     complete = False
@@ -99,8 +104,10 @@ def bubble_sort_bottom_to_top(data):
         for i in range(len(data) - 1 - inplace):
             if data[i] > data[i + 1]:
                 data[i], data[i + 1] = data[i + 1], data[i]
-                GUI_handle_swap(data, set([i, i + 1]))
+                comparison(data, set([i, i + 1]))
                 complete = False
+            else:
+                comparison()
         inplace += 1
 
 def bubble_sort_top_to_bottom(data):
@@ -111,8 +118,10 @@ def bubble_sort_top_to_bottom(data):
         for i in range(len(data) - 1, inplace, -1):
             if data[i] < data[i - 1]:
                 data[i], data[i - 1] = data[i - 1], data[i]
-                GUI_handle_swap(data, set([i, i - 1]))
+                comparison(data, set([i, i - 1]))
                 complete = False
+            else:
+                comparison()
         inplace += 1
 
 def cocktail_shaker(data):
@@ -125,16 +134,20 @@ def cocktail_shaker(data):
         for i in range(inplace_bottom, len(data) - 1 - inplace_top):
             if data[i] > data[i + 1]:
                 data[i], data[i + 1] = data[i + 1], data[i]
-                GUI_handle_swap(data, set([i, i + 1]))
+                comparison(data, set([i, i + 1]))
                 complete = False
+            else:
+                comparison()
 
         inplace_top += 1
 
         for i in range(len(data) - 1 - inplace_top, inplace_bottom, -1):
             if data[i] < data[i - 1]:
                 data[i], data[i - 1] = data[i - 1], data[i]
-                GUI_handle_swap(data, set([i, i - 1]))
+                comparison(data, set([i, i - 1]))
                 complete = False
+            else:
+                comparison()
 
         inplace_bottom += 1
 
@@ -150,11 +163,13 @@ def partition(data, low, high):
     while j < high:
         if data[j] < pivot:
             data[j], data[i] = data[i], data[j]
-            GUI_handle_swap(data, set([i, j]))
+            comparison(data, set([i, j]))
             i += 1
+        else:
+            comparison()
         j += 1
     data[i], data[high] = data[high], data[i]
-    GUI_handle_swap(data, set([i, high]))
+    comparison(data, set([i, high]))
     return i
 
 def merge_sort(data, low=0, high=len(unsorted_data) - 1):
@@ -174,11 +189,11 @@ def merge(data, low, mid, high):
     while index <= high:
         if l[l_count] <= r[r_count]:
             data[index] = l[l_count]
-            GUI_handle_swap(data, set([index, l_count]))
+            comparison(data, set([index, l_count]))
             l_count += 1
         else:
             data[index] = r[r_count]
-            GUI_handle_swap(data, set([index, r_count]))
+            comparison(data, set([index, r_count]))
             r_count += 1
         index += 1
 
@@ -195,7 +210,7 @@ def counting_sort(data):
         num = data[index]
         output[count[num] - 1] = num
         count[num] = count[num] - 1
-        GUI_handle_swap(output, set([count[num]]))
+        comparison(output, set([count[num]]))
     global sorting_data
     sorting_data = output
 
@@ -221,7 +236,7 @@ def digit_counting_sort(data, digit, digits):
         num_digit = int(str(num).rjust(digits, "0")[digit])
         output[count[num_digit] - 1] = num
         count[num_digit] = count[num_digit] - 1
-        GUI_handle_swap(output, set([count[num_digit]]))
+        comparison(output, set([count[num_digit]]))
     return output
 
 def shell_sort(data):
@@ -234,10 +249,10 @@ def shell_sort(data):
             key, index = data[i], i
             while index >= gap and key < data[index - gap]:
                 data[index] = data[index - gap]
-                GUI_handle_swap(data, set([index, index-gap]))
+                comparison(data, set([index, index-gap]))
                 index -= gap
             data[index] = key
-            GUI_handle_swap(data, set([index]))
+            comparison(data, set([index]))
         
         gap //= 3
 
@@ -261,14 +276,16 @@ algorithms = {
     }
 
 def run_sorting_algorithm(user_screen, algorithm:str=None, speed:int=120):
-    global screen, comparisons_per_second
+    global screen, comparisons_per_second, sorting_data
     screen = user_screen
     comparisons_per_second = speed
     
     sorting_data = unsorted_data[:]
-    GUI_handle_swap(sorting_data)
+    render_bars(sorting_data)
     algorithms[algorithm](sorting_data)
-    GUI_handle_swap(sorting_data, set(list(range(len(sorting_data)))), GREEN)
+    print(sorting_data)
+    render_bars(sorting_data, set(list(range(len(sorting_data)))), GREEN)
+    pygame.time.delay(1000)
 
 if __name__ == '__main__':
     algorithm = input(f"Choose an Algorithm {list(algorithms.keys())}:")
