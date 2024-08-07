@@ -2,9 +2,12 @@ import pygame
 import random
 
 pygame.init()
+clock = pygame.time.Clock()
+comparisons_per_second = 120
 
 #rgb colours
 WHITE = (255, 255, 255)
+GREY = (100, 100, 100)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
@@ -36,7 +39,8 @@ def render_bars(bar_data:list, highlight:set=set(), highlight_colour:tuple=RED):
 
         pygame.draw.rect(screen, colour, (bar_x_offset, SCREEN_HEIGHT - height, BAR_WIDTH, height))
 
-def GUI_handle_swap(bar_data:list, highlight:set=set(), highlight_colour:tuple=RED, delay:int=5):
+def GUI_handle_swap(bar_data:list, highlight:set=set(), highlight_colour:tuple=RED):
+    clock.tick(comparisons_per_second)
     screen.fill(BLACK) #reset bars
     render_bars(bar_data, highlight, highlight_colour)
     pygame.display.update()
@@ -44,8 +48,6 @@ def GUI_handle_swap(bar_data:list, highlight:set=set(), highlight_colour:tuple=R
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-
-    pygame.time.delay(delay) #add delay for easier visualisation
 
 """
 SORTING ALGORITHMS
@@ -258,15 +260,15 @@ algorithms = {
         "Shell" : shell_sort,
     }
 
-def run_sorting_algorithm(algorithm:str=None):
-    global screen
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+def run_sorting_algorithm(user_screen, algorithm:str=None, speed:int=120):
+    global screen, comparisons_per_second
+    screen = user_screen
+    comparisons_per_second = speed
     
     sorting_data = unsorted_data[:]
-    GUI_handle_swap(sorting_data, delay=3000)
+    GUI_handle_swap(sorting_data)
     algorithms[algorithm](sorting_data)
-    GUI_handle_swap(sorting_data, set(list(range(len(sorting_data)))), GREEN, 3000)
-    pygame.quit()
+    GUI_handle_swap(sorting_data, set(list(range(len(sorting_data)))), GREEN)
 
 if __name__ == '__main__':
     algorithm = input(f"Choose an Algorithm {list(algorithms.keys())}:")
