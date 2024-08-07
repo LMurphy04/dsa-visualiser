@@ -1,0 +1,41 @@
+{
+    "Bogo" : {
+        "name" : "Bogo Sort"
+    },
+
+    "Cocktail" : {
+        "name" : "Bogo Sort"
+    },
+
+    "Bubble" : {
+        "name" : "Bogo Sort"
+    },
+
+    "Insertion" : {
+        "name" : "Bogo Sort"
+    },
+
+    "Selection" : {
+        "name" : "Bogo Sort"
+    },
+
+    "Merge" : {
+        "name" : "Bogo Sort"
+    },
+
+    "Quick" : {
+        "name" : "Bogo Sort"
+    },
+
+    "Radix" : {
+        "name" : "Bogo Sort"
+    },
+
+    "Counting" : {
+        "name" : "Bogo Sort"
+    },
+    
+    "Shell" : {
+        "name" : "Bogo Sort"
+    }
+}
