@@ -1,5 +1,6 @@
 import pygame
 import random
+import sys
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -50,6 +51,7 @@ def comparison(bar_data:list=None, highlight:set=set(), highlight_colour:tuple=R
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+            sys.exit()
         if event.type == pygame.KEYDOWN:
             if event.key==pygame.K_BACKSPACE:
                 raise VisualisationAborted
@@ -178,6 +180,33 @@ def partition(data, low, high):
     comparison(data, set([i, high]))
     return i
 
+def dutch_quick_sort(data, low=0, high=len(unsorted_data) - 1):
+    if low < high:
+        bottom, top = dutch_partition(data,low,high)
+        dutch_quick_sort(data, low, bottom - 1)
+        dutch_quick_sort(data, top, high)
+
+def dutch_partition(data, low, high):
+    pivot = data[high]
+    i, j, k = low, low, low
+    while i < high:
+        val = data[i]
+        if val < pivot:
+            data[k], data[i] = data[i], data[k]
+            comparison(data, set([i, k]))
+            k += 1
+            j += 1
+        elif val == pivot:
+            data[j], data[i] = data[i], data[j]
+            comparison(data, set([i, j]))
+            j += 1
+        else:
+            comparison()
+        i += 1
+    data[j], data[high] = data[high], data[j]
+    comparison(data, set([j, high]))
+    return k, j
+
 def merge_sort(data, low=0, high=len(unsorted_data) - 1):
     if low < high:
         mid = (low + high) // 2
@@ -206,9 +235,11 @@ def merge(data, low, mid, high):
 def counting_sort(data):
     count = [0] * (max(data) + 1)
     for num in data:
+        comparison()
         count[num] += 1
     total = 0
     for index, num in enumerate(count):
+        comparison()
         total += num
         count[index] = total
     output = data[:]
@@ -231,9 +262,11 @@ def radix_sort(data):
 def digit_counting_sort(data, digit, digits):
     count = [0] * 10
     for num in data:
+        comparison()
         count[int(str(num).rjust(digits, "0")[digit])] += 1
     total = 0
     for index, num in enumerate(count):
+        comparison()
         total += num
         count[index] = total
     output = data[:]
@@ -279,6 +312,7 @@ algorithms = {
         "Radix" : radix_sort,
         "Counting" : counting_sort,
         "Shell" : shell_sort,
+        "Dutch" : dutch_quick_sort,
     }
 
 def run_sorting_algorithm(user_screen, algorithm:str=None, speed:int=120):

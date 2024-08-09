@@ -1,12 +1,17 @@
 from pygame import Surface
 import pygame
+import os
 
-def draw_text(screen:Surface, text:str, size, font, colour, x, y, bold=False, italic=False, max_x=800):
-    text_font = pygame.font.SysFont(font, size, bold, italic)
+PXL = f"{os.path.dirname(__file__)}/fonts/pxl.ttf"
+PXL_BOLD = f"{os.path.dirname(__file__)}/fonts/pxl_bold.ttf"
+
+def draw_text(screen:Surface, text:str, size, colour, x, y, bold=False, max_x=790):
+    if bold: font = PXL_BOLD
+    else: font = PXL
+    text_font = pygame.font.Font(font, size)
     cur_x = x
     cur_y = y
     space_size = size // 3
-    if italic: space_size //= 2
 
     words = text.split(" ")
 
