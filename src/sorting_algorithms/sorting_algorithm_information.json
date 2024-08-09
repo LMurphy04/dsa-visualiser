@@ -1,6 +1,14 @@
 {
     "Bogo" : {
-        "name" : "Bogo Sort"
+        "name" : "Bogo Sort",
+        "time" : {
+            "worst" : "O(inf)",
+            "average" : "O(inf)",
+            "best" : "O(n)"
+        },
+        "space" : "O(1)",
+        "stable" : "No",
+        "description" : "This is the description lets see how this works probably poorly This is the description lets see how this works probably poorly This is the description lets see how this works probably poorly This is the description lets see how this works probably poorly"
     },
 
     "Cocktail" : {

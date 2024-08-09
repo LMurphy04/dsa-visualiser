@@ -24,6 +24,9 @@ max_height = max(unsorted_data)
 HEIGHT_AMPLIFIER = SCREEN_HEIGHT // max_height
 BAR_WIDTH = SCREEN_WIDTH // n
 
+class VisualisationAborted(Exception):
+    pass
+
 """
 DISPLAY DATA AS BARS
 """
@@ -47,6 +50,9 @@ def comparison(bar_data:list=None, highlight:set=set(), highlight_colour:tuple=R
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
+        if event.type == pygame.KEYDOWN:
+            if event.key==pygame.K_BACKSPACE:
+                raise VisualisationAborted
 
     if bar_data:
         render_bars(bar_data, highlight, highlight_colour)
@@ -84,7 +90,7 @@ def bogo_sort(data):
                 complete = False
                 break
         if not complete: random.shuffle(data)
-        comparison(data, delay=0)
+        comparison(data)
 
 def insertion_sort(data):
     for i in range(1, len(data)):
@@ -280,12 +286,14 @@ def run_sorting_algorithm(user_screen, algorithm:str=None, speed:int=120):
     screen = user_screen
     comparisons_per_second = speed
     
-    sorting_data = unsorted_data[:]
-    render_bars(sorting_data)
-    algorithms[algorithm](sorting_data)
-    print(sorting_data)
-    render_bars(sorting_data, set(list(range(len(sorting_data)))), GREEN)
-    pygame.time.delay(1000)
+    try:
+        sorting_data = unsorted_data[:]
+        render_bars(sorting_data)
+        algorithms[algorithm](sorting_data)
+        render_bars(sorting_data, set(list(range(len(sorting_data)))), GREEN)
+        pygame.time.delay(1000)
+    except VisualisationAborted:
+        print("Visualisation Aborted.")
 
 if __name__ == '__main__':
     algorithm = input(f"Choose an Algorithm {list(algorithms.keys())}:")

@@ -29,6 +29,6 @@ while run:
 
         if event.type == pygame.KEYDOWN:
             if event.key==pygame.K_RETURN:
-                render_sorting_algorithm_display(screen, "Radix")
+                render_sorting_algorithm_display(screen, "Bogo")
 
 pygame.quit()
