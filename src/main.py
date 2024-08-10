@@ -4,6 +4,7 @@ from text import draw_text
 import os
 import sys
 from sorting_algorithms.sorting_visualiser import run_sorting_algorithm
+from graphs.tree import visualise_tree
 
 pygame.init()
 
@@ -94,10 +95,19 @@ def visualiser_select_screen(screen:Surface):
                 ("3-Way Quick Sort","Dutch"),
             ]
         },
+        "Binary Tree Traversals" : {
+            "y" : 0,
+            "buttons" : [
+                ("Inorder","Inorder"),
+                ("Preorder","Preorder"),
+                ("Postorder","Postorder"),
+                ("Breadth First Search","BFS"),
+                ("Boundary","Boundary"),
+            ]
+        },
     }
 
     buttons = []
-    submenu_lengths = []
     active_row, active_col = 0, 0
 
     BUTTON_WIDTH = 150
@@ -112,27 +122,27 @@ def visualiser_select_screen(screen:Surface):
     for submenu in submenus.items():
 
         submenu[1]["y"] = y
-        submenu_lengths.append(len(submenu[1]["buttons"]))
         y += SUBMENU_TITLE_SIZE + BUTTON_GAP
         buttons.append([])
+        if submenu[0] == "Sorting Algorithms":
+            func = run_sorting_algorithm
+        elif submenu[0] == "Binary Tree Traversals":
+            func = visualise_tree
 
         for button in submenu[1]["buttons"]:
             if x <= SCREEN_WIDTH - BUTTON_WIDTH - BUTTON_GAP:
-                buttons[row].append(Button(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, button[0], run_sorting_algorithm, [screen, button[1]]))
+                buttons[row].append(Button(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, button[0], func, [screen, button[1]]))
                 x += BUTTON_WIDTH + BUTTON_GAP
             else:
                 x = 10
                 y += BUTTON_HEIGHT + BUTTON_GAP
                 buttons.append([])
                 row += 1
-                buttons[row].append(Button(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, button[0], run_sorting_algorithm, [screen, button[1]]))
+                buttons[row].append(Button(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, button[0], func, [screen, button[1]]))
                 x += BUTTON_WIDTH + BUTTON_GAP
         row += 1
         x = 10
         y += BUTTON_HEIGHT + BUTTON_GAP * 3
-
-    for index in range(1, len(submenu_lengths)):
-        submenu_lengths[index] += submenu_lengths[index - 1]
 
     def display_menu(screen:Surface):
         screen.fill(NAVY)
