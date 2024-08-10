@@ -1,5 +1,4 @@
 import pygame
-from sorting_algorithms.sorting_algorithm_display import render_sorting_algorithm_display
 from pygame import Surface
 from text import draw_text
 import os
@@ -27,6 +26,30 @@ ico = pygame.image.load(f"{os.path.dirname(__file__)}/ico.png").convert_alpha()
 pygame.display.set_icon(ico)
 run = True
 
+class Slider():
+
+    def __init__(self, x, y, width, height, min, max, initial_val):
+        self.min = min
+        self.max = max
+        initial_percentage = initial_val / (max + min)
+        self.back = pygame.Rect(x, y, width, height)
+        self.slide = pygame.Rect(x + 5, y, width - 9, height)
+        self.handle = pygame.Rect(x + int((width - 9) * initial_percentage), y, 10, height)
+
+    def draw(self):
+        pygame.draw.rect(screen, WHITE, self.back)
+        pygame.draw.rect(screen, WHITE, self.slide)
+        pygame.draw.rect(screen, RED, self.handle)
+
+    def get_val(self):
+        return int(((self.max - self.min + 1) / self.slide.width * (self.handle.centerx - self.slide.x)) + self.min)
+    
+    def move_slider(self, mouse_pos):
+        self.handle.centerx = mouse_pos[0]
+        self.draw()
+
+speed_slider = Slider(10, 110, 600, 10, 10, 1000, 120)
+
 class Button():
     
     def __init__(self, x, y, width, height, text, func, params):
@@ -39,7 +62,7 @@ class Button():
         draw_text(screen, self.text, 20, BLACK, self.rect.x, self.rect.y, max_x=self.rect.x+self.rect.width)
 
     def activate(self):
-        self.action[0](*self.action[1])
+        self.action[0](*self.action[1], speed_slider.get_val())
 
 def title_screen(screen:Surface):
     screen.fill(NAVY)
@@ -71,37 +94,6 @@ def visualiser_select_screen(screen:Surface):
                 ("3-Way Quick Sort","Dutch"),
             ]
         },
-        "Sorting Algorithms 2" : {
-            "y" : 0,
-            "buttons" : [
-                ("Selection Sort Max", "Selection Max"),
-                ("Selection Sort Min", "Selection Min"),
-                ("Insertion Sort", "Insertion"),
-                ("Selection Sort Max", "Selection Max"),
-                ("Selection Sort Min", "Selection Min"),
-                ("Insertion Sort", "Insertion"),
-                ("Selection Sort Max", "Selection Max"),
-            ]
-        },
-        "Sorting Algorithms 3" : {
-            "y" : 0,
-            "buttons" : [
-                ("Selection Sort Max", "Selection Max"),
-                ("Selection Sort Min", "Selection Min"),
-                ("Insertion Sort", "Insertion"),
-            ]
-        },
-        "Sorting Algorithms 4" : {
-            "y" : 0,
-            "buttons" : [
-                ("Selection Sort Max", "Selection Max"),
-                ("Selection Sort Min", "Selection Min"),
-                ("Insertion Sort", "Insertion"),
-                ("Selection Sort Max", "Selection Max"),
-                ("Selection Sort Min", "Selection Min"),
-                ("Insertion Sort", "Insertion"),
-            ]
-        },
     }
 
     buttons = []
@@ -113,7 +105,7 @@ def visualiser_select_screen(screen:Surface):
     BUTTON_GAP = 5
     SUBMENU_TITLE_SIZE = 20
 
-    y = 85
+    y = 140
     x = 10
     row = 0
 
@@ -145,7 +137,8 @@ def visualiser_select_screen(screen:Surface):
     def display_menu(screen:Surface):
         screen.fill(NAVY)
         draw_text(screen, "select a visual", 40, WHITE, 10, 10, True)
-        draw_text(screen, "use arrow keys or wasd to select and press enter to start", 20, WHITE, 10, 50)
+        draw_text(screen, "use arrow keys, wasd (and enter) or mouse to select", 20, WHITE, 10, 50)
+        draw_text(screen, "speed", 20, WHITE, 10, 90, True)
         for submenu in submenus.items():
             draw_text(screen, submenu[0], SUBMENU_TITLE_SIZE, WHITE, 10, submenu[1]["y"], True)
         for row in range(len(buttons)):
@@ -156,6 +149,8 @@ def visualiser_select_screen(screen:Surface):
                 else:
                     colour = WHITE
                 buttons_row[col].draw(colour)
+        speed_slider.draw()
+        
 
     def change_active(direction, active_row, active_col):
         if direction == "LEFT":
@@ -189,6 +184,19 @@ def visualiser_select_screen(screen:Surface):
     while run:
         clock.tick(60)
         pygame.display.update()
+
+        mouse_pos = pygame.mouse.get_pos()
+        mouse_clicked = pygame.mouse.get_pressed()
+
+        if mouse_clicked[0] and speed_slider.slide.collidepoint(mouse_pos):
+            speed_slider.move_slider(mouse_pos)
+
+        for click_row in range(len(buttons)):
+            for click_col in range(len(buttons[click_row])):
+                if mouse_clicked[0] and buttons[click_row][click_col].rect.collidepoint(mouse_pos):
+                    active_row, active_col = click_row, click_col
+                    buttons[click_row][click_col].activate()
+                    display_menu(screen)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
