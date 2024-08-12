@@ -122,14 +122,14 @@ algorithms = {
         "Inorder" : inorder,
         "Postorder" : postorder,
         "Preorder" : preorder,
-        "BFS" : bfs,
+        "Breadth First Search" : bfs,
         "Boundary" : boundary,
     }
 
-def visualise_tree(screen:Surface, algorithm, speed=120):
+def visualise_tree(screen:Surface, algorithm, speed_slider):
     initial_render(screen)
 
-    speed = (speed // SPEED_SCALE) + 1
+    speed = (speed_slider() // SPEED_SCALE) + 1
 
     try:
         algorithms[algorithm](screen, speed)
