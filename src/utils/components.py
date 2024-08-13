@@ -60,3 +60,17 @@ class BinaryNode():
 
     def draw(self, screen:Surface, colour:tuple[int, int, int]) -> None:
         pygame.draw.circle(screen, colour, self.position, self.radius)
+
+class GraphNode():
+    
+    def __init__(self, position:tuple[int, int], radius:int) -> None:
+        self.position = position
+        self.radius = radius
+        self.edges = []
+
+    def add_edge(self, node, weight:int) -> None:
+        self.edges.append((node, weight))
+        node.edges.append((self, weight))
+
+    def draw(self, screen:Surface, colour:tuple[int, int, int]) -> None:
+        pygame.draw.circle(screen, colour, self.position, self.radius)

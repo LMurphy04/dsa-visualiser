@@ -2,6 +2,7 @@ import pygame, sys
 
 from sorting_algorithms.sorting_visualiser import run_sorting_algorithm
 from graphs.tree import visualise_tree
+from graphs.graph import visualise_graph
 from utils.components import Slider, VisualiseButton
 from pygame import Surface
 from utils.text import draw_multiline_text
@@ -44,6 +45,8 @@ def visualiser_select_screen(screen:Surface):
                 func = run_sorting_algorithm
             elif submenu == "Binary Tree Traversals":
                 func = visualise_tree
+            elif submenu == "Graph Traversals":
+                func = visualise_graph
             
             # New Button Row
             buttons.append([])

@@ -34,6 +34,13 @@ VISUALISATIONS = {
         "Postorder",
         "Breadth First Search",
         "Boundary",
+    ],
+    "Graph Traversals" : [
+        "Breadth First Search",
+        "Depth First Search",
+        "Djkstra's",
+        "Bellman Ford",
+        "A*",
     ]
 }
 
