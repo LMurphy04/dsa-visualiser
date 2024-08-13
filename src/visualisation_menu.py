@@ -22,9 +22,9 @@ def visualiser_select_screen(screen:Surface):
     run = True
 
     # Slider for Visualisation Speed: screen, position, dimensions, value range, initial value
-    speed_slider = Slider(screen, (10, 110), (600, 10), (10, 1000), 120)
+    speed_slider = Slider(screen, (BORDER, 110), (600, 10), (10, 1000), 120)
 
-    def create_buttons(menu_pos: tuple):
+    def create_buttons(menu_pos: tuple[int, int]) -> tuple[list[tuple[str, int]], list[list[VisualiseButton]]]:
 
         buttons, submenu_titles = [], []
         x, y = menu_pos
@@ -74,16 +74,16 @@ def visualiser_select_screen(screen:Surface):
         screen.fill(NAVY)
 
         # Title and Subtitle
-        draw_multiline_text(screen, (10, 10), "select a visual", 40, WHITE, True)
-        draw_multiline_text(screen, (10, 50), "use arrow keys, wasd (and enter) or mouse to select", 20, WHITE, )
+        draw_multiline_text(screen, (BORDER, 10), "select a visual", 40, WHITE, True)
+        draw_multiline_text(screen, (BORDER, 50), "use arrow keys, wasd (and enter) or mouse to select", 20, WHITE, )
 
         # Speed Slider
-        draw_multiline_text(screen, (10, 90), "speed", 20, WHITE, True)
+        draw_multiline_text(screen, (BORDER, 90), "speed", 20, WHITE, True)
         speed_slider.draw()
 
         # Submenu Titles
         for title, y in submenu_titles:
-            draw_multiline_text(screen, (10, y), title, SUBMENU_TITLE_SIZE, WHITE, True)
+            draw_multiline_text(screen, (BORDER, y), title, SUBMENU_TITLE_SIZE, WHITE, True)
 
         # Buttons
         for row in range(len(buttons)):

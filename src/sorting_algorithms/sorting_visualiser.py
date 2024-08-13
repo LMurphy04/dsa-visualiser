@@ -1,6 +1,6 @@
 import pygame, sys, random
 from pygame import Surface
-from config import SCREEN_SIZE, WHITE, BLACK, RED, GREEN, VisualisationAborted
+from config import SCREEN_SIZE, WHITE, NAVY, RED, GREEN, VisualisationAborted
 
 # Initialise pygame
 pygame.init()
@@ -15,8 +15,8 @@ HEIGHT_AMPLIFIER = SCREEN_SIZE[1] // max_height
 BAR_WIDTH = SCREEN_SIZE[0] // n
 
 # Display Data
-def render_bars(bar_data:list, highlight:set=set(), highlight_colour:tuple=RED) -> None:
-    screen.fill(BLACK)
+def render_bars(bar_data:list[int], highlight:set[int]=set(), highlight_colour:tuple[int, int, int]=RED) -> None:
+    screen.fill(NAVY)
 
     for index in range(len(bar_data)):
         height = bar_data[index] * HEIGHT_AMPLIFIER
@@ -28,7 +28,7 @@ def render_bars(bar_data:list, highlight:set=set(), highlight_colour:tuple=RED) 
 
     pygame.display.update()
 
-def comparison(bar_data:list=None, highlight:set=set(), highlight_colour:tuple=RED) -> None:
+def comparison(bar_data:list[int]=None, highlight:set[int]=set(), highlight_colour:tuple[int, int, int]=RED) -> None:
     clock.tick(comparisons_per_second)
 
     for event in pygame.event.get():
@@ -301,11 +301,14 @@ def run_sorting_algorithm(user_screen:Surface, algorithm:str, speed_slider:calla
     comparisons_per_second = speed_slider()
     
     try:
+        # Run Visualisation
         sorting_data = unsorted_data[:]
         render_bars(sorting_data)
         algorithms[algorithm](sorting_data)
+        # Show Completed Visual in Green
         render_bars(sorting_data, set(list(range(len(sorting_data)))), GREEN)
         pygame.time.delay(1000)
+        
     except VisualisationAborted:
         print("Visualisation Aborted.")
 

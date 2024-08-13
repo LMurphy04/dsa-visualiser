@@ -1,113 +1,107 @@
-import pygame
+import pygame, sys
+
 from pygame import Surface
+from config import VisualisationAborted, BORDER, WHITE, NAVY, GREY, RED, SCREEN_SIZE
+from utils.components import BinaryNode
+
+# Initialise pygame
 pygame.init()
-import sys
 clock = pygame.time.Clock()
 
-class VisualisationAborted(Exception):
-    pass
-
-class Node():
-    
-    def __init__(self, x, y, radius):
-        self.x = x
-        self.y = y
-        self.radius = radius
-        self.left = None
-        self.right = None
-
-    def draw(self, screen, colour, text=None):
-        pygame.draw.circle(screen, colour, (self.x , self.y), self.radius)
-
+# Tree and Node Properties
 DEPTH = 4
-SPEED_SCALE = 35
-NODE_SIZE = 580 // (2**(DEPTH+1))
-BORDER = 10
-X_OFFSET = 390
-Y_OFFSET = (580 - (2 * NODE_SIZE)) // DEPTH
+SPEED_SCALE = 35 # Frame Rate Adjustment as Speed Slider is Based on Sorting Algs
+NODE_SIZE = (SCREEN_SIZE[1] - 2 * BORDER) // (2**(DEPTH+1))
+X_OFFSET = SCREEN_SIZE[0] // 2 - BORDER
+Y_OFFSET = (SCREEN_SIZE[1] - 2 * BORDER - 2 * NODE_SIZE) // DEPTH
 
-x, y = BORDER + X_OFFSET, BORDER + NODE_SIZE
-
-root = [None]
-
-def build_tree(node_x, node_y, depth=0):
-    node = Node(node_x, node_y, NODE_SIZE)
-    if root[0] == None: root[0] = node
+def build_tree(position:tuple[int, int], depth:int=0) -> BinaryNode:
+    node = BinaryNode(position, NODE_SIZE)
     if depth < DEPTH:
-        node.left = build_tree(node_x - X_OFFSET // (2**(depth+1)), node_y + Y_OFFSET, depth + 1)
-        node.right = build_tree(node_x + X_OFFSET // (2**(depth+1)), node_y + Y_OFFSET, depth + 1)
+        node.left = build_tree((position[0] - X_OFFSET // (2**(depth+1)), position[1] + Y_OFFSET), depth + 1)
+        node.right = build_tree((position[0] + X_OFFSET // (2**(depth+1)), position[1] + Y_OFFSET), depth + 1)
     return node
 
-build_tree(x, y)
+root_position = (SCREEN_SIZE[0] // 2, BORDER + NODE_SIZE)
+root = build_tree(root_position)
 
-def initial_render(screen:Surface):
-    
-    def render_tree(node = root[0]):
+def initial_render(screen:Surface) -> None:
+    screen.fill(NAVY)
+
+    def render_tree(node:BinaryNode = root) -> None:
         if node.left:
-            pygame.draw.line(screen, (255, 255, 255), (node.x, node.y), (node.left.x, node.left.y))
+            pygame.draw.line(screen, WHITE, node.position, node.left.position)
             render_tree(node.left)
         if node.right:
-            pygame.draw.line(screen, (255, 255, 255), (node.x, node.y), (node.right.x, node.right.y))
+            pygame.draw.line(screen, WHITE, node.position, node.right.position)
             render_tree(node.right)
-        node.draw(screen, (255, 255, 255))
+        node.draw(screen, WHITE)
 
-    screen.fill((0, 0, 50))
     render_tree()
     pygame.display.update()
 
-def flag(screen, speed, node):
+def flag(screen:Surface, speed:int, node:BinaryNode) -> None:
     clock.tick(speed)
-    node.draw(screen, (255, 0, 0))
+
+    # Flag Node
+    node.draw(screen, RED)
     pygame.display.update()
-    node.draw(screen, (100, 100, 100))
+
+    # Mark Node as Visited
+    node.draw(screen, GREY)
+
     for event in pygame.event.get():
+        # Handle Quit
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+
         if event.type == pygame.KEYDOWN:
+            # Back Out to Menu
             if event.key==pygame.K_BACKSPACE:
                 raise VisualisationAborted
 
-def preorder(screen:Surface, speed, node = root[0]):
+# Traversals
+def preorder(screen:Surface, speed:int, node:BinaryNode = root) -> None:
     flag(screen, speed, node)
     if node.left: preorder(screen, speed, node.left)
     if node.right: preorder(screen, speed, node.right)
 
-def postorder(screen:Surface, speed, node = root[0]):
+def postorder(screen:Surface, speed:int, node:BinaryNode = root) -> None:
     if node.left: postorder(screen, speed, node.left)
     if node.right: postorder(screen, speed, node.right)
     flag(screen, speed, node)
 
-def inorder(screen:Surface, speed, node = root[0]):
+def inorder(screen:Surface, speed:int, node:BinaryNode = root) -> None:
     if node.left: inorder(screen, speed, node.left)
     flag(screen, speed, node)
     if node.right: inorder(screen, speed, node.right)
 
-def bfs(screen:Surface, speed):
-    to_visit = [root[0]]
+def bfs(screen:Surface, speed:int) -> None:
+    to_visit = [root]
     while to_visit:
         node = to_visit.pop(0)
         flag(screen, speed, node)
         if node.left: to_visit.append(node.left)
         if node.right: to_visit.append(node.right)
 
-def boundary(screen, speed):
+def boundary(screen:Surface, speed:int) -> None:
 
-    def down_left(screen, speed, node = root[0]):
+    def down_left(screen:Surface, speed:int, node:BinaryNode = root) -> None:
         if node.left:
             flag(screen, speed, node)
             down_left(screen, speed, node.left)
         elif node.right:
             flag(screen, speed, node)
 
-    def leaves(screen, speed, node = root[0]):
+    def leaves(screen:Surface, speed:int, node:BinaryNode = root) -> None:
         if not node.left and not node.right:
             flag(screen, speed, node)
         else:
             if node.left: leaves(screen, speed, node.left)
             if node.right: leaves(screen, speed, node.right)
 
-    def up_right(screen, speed, node = root[0]):
+    def up_right(screen:Surface, speed:int, node:BinaryNode = root) -> None:
         if node.right:
             up_right(screen, speed, node.right)
             flag(screen, speed, node)
@@ -118,6 +112,7 @@ def boundary(screen, speed):
     leaves(screen, speed)
     up_right(screen, speed)
 
+# Map from Menu Buttons to Functions
 algorithms = {
         "Inorder" : inorder,
         "Postorder" : postorder,
@@ -126,10 +121,10 @@ algorithms = {
         "Boundary" : boundary,
     }
 
-def visualise_tree(screen:Surface, algorithm, speed_slider):
-    initial_render(screen)
+def visualise_tree(screen:Surface, algorithm:str, speed_slider:callable) -> None:
+    speed = (speed_slider() // SPEED_SCALE) + 1 # +1 Prevents Speed = 0
 
-    speed = (speed_slider() // SPEED_SCALE) + 1
+    initial_render(screen)
 
     try:
         algorithms[algorithm](screen, speed)

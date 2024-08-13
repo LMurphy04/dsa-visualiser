@@ -8,6 +8,7 @@ GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 BLACK = (0, 0, 0)
 NAVY = (0, 0, 50)
+GREY = (100, 100, 100)
 
 # Visualisations: { Submenu : [Visuals] }
 VISUALISATIONS = {
