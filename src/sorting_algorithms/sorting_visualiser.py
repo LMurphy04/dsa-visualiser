@@ -278,6 +278,38 @@ def shell_sort(data:list[int]) -> None:
         
         gap //= 3
 
+def heap_sort(data:list[int]) -> None:
+
+    def left(index:int) -> int:
+        return (2 * index) + 1
+
+    def right(index:int) -> int:
+        return (2 * index) + 2
+
+    def build_max_heap(data:list[int]) -> None:
+        for index in range(len(data) // 2 - 1, -1, -1):
+            max_heapify(data, index, len(data))
+
+    def max_heapify(data:list[int], index:int, max_index:int) -> None:
+        l, r, largest = left(index), right(index), index
+        if l < max_index and data[l] > data[largest]:
+            largest = l
+        if r < max_index and data[r] > data[largest]:
+            largest = r
+        if largest != index:
+            data[index], data[largest] = data[largest], data[index]
+            comparison(data, set([index, largest]))
+            max_heapify(data, largest, max_index)
+        else:
+            comparison()
+
+    build_max_heap(data)
+
+    for index in range(len(data) - 1, 0, -1):
+        data[0], data[index] = data[index], data[0]
+        comparison(data, set([0, index]))
+        max_heapify(data, 0, index)
+
 # Map from Menu Buttons to Functions
 algorithms = {
         "Bogo Sort" : bogo_sort,
@@ -293,6 +325,7 @@ algorithms = {
         "Counting Sort" : counting_sort,
         "Shell Sort" : shell_sort,
         "3-Way Quick Sort" : dutch_quick_sort,
+        "Heap Sort" : heap_sort,
     }
 
 def run_sorting_algorithm(user_screen:Surface, algorithm:str, speed_slider:callable) -> None:

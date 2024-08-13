@@ -26,6 +26,7 @@ VISUALISATIONS = {
         "Counting Sort",
         "Shell Sort",
         "3-Way Quick Sort",
+        "Heap Sort",
     ],
     "Binary Tree Traversals" : [
         "Inorder",
