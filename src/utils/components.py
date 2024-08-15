@@ -1,7 +1,7 @@
 import pygame
 from config import WHITE, RED, BLACK
 from pygame import Surface
-from utils.text import draw_multiline_text
+from utils.text import draw_multiline_text, centered_single_line
 
 class Slider():
 
@@ -67,10 +67,15 @@ class GraphNode():
         self.position = position
         self.radius = radius
         self.edges = []
+        self.value = float("inf")
+        self.predecessor = None
 
     def add_edge(self, node, weight:int) -> None:
         self.edges.append((node, weight))
         node.edges.append((self, weight))
 
-    def draw(self, screen:Surface, colour:tuple[int, int, int]) -> None:
+    def draw(self, screen:Surface, colour:tuple[int, int, int], show_value:bool=False) -> None:
         pygame.draw.circle(screen, colour, self.position, self.radius)
+        if show_value:
+            display_value = "inf" if self.value == float("inf") else str(self.value)
+            centered_single_line(screen, self.position, display_value, 20, BLACK)
