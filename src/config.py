@@ -44,8 +44,10 @@ VISUALISATIONS = {
         "A*",
     ],
     "Hashmaps" : [
+        "Chaining",
         "Linear Probing",
-        "Quadratic Probing"
+        "Quadratic Probing",
+        "Double Hashing",
     ]
 }
 

@@ -79,3 +79,10 @@ class GraphNode():
         if show_value:
             display_value = "inf" if self.value == float("inf") else str(self.value)
             centered_single_line(screen, self.position, display_value, 20, BLACK)
+
+class LinkedListNode():
+
+    def __init__(self, value:any) -> None:
+        self.value = value
+        self.next = None
+        self.prev = None
