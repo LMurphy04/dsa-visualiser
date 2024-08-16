@@ -128,7 +128,6 @@ def visualise_tree(screen:Surface, algorithm:str, speed_slider:callable) -> None
 
     try:
         algorithms[algorithm](screen, speed)
-        clock.tick(speed)
         pygame.display.update()
     except VisualisationAborted:
         print("Visualisation Aborted.")
