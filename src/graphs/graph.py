@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, math
 from pygame import Surface
 from config import VisualisationAborted, WHITE, NAVY, GREEN, RED
 from utils.components import GraphNode
@@ -13,6 +13,9 @@ NODE_SIZE = 20
 
 nodes = [GraphNode(position, NODE_SIZE) for position in node_locations]
 
+for from_node, to_node, weight in edges:
+    nodes[from_node].add_edge(nodes[to_node], weight)
+
 def reset_nodes() -> None:
     for node in nodes:
         node.value = float("inf")
@@ -22,9 +25,6 @@ def initialise_graph(screen:Surface, show_value:bool) -> tuple[GraphNode, GraphN
     screen.fill(NAVY)
 
     reset_nodes()
-
-    for from_node, to_node, weight in edges:
-        nodes[from_node].add_edge(nodes[to_node], weight)
 
     nodes[0].value = 0
     centered_single_line(screen, (nodes[0].position[0], nodes[0].position[1] + 30), "START", 20, WHITE)
@@ -198,10 +198,39 @@ def bellman_ford(screen:Surface, speed:int, start:GraphNode, end:GraphNode) -> N
         # Highlight Shortest Path
         shortest_path = generate_predecessor_path(end, start)
         highlight_path(screen, shortest_path, GREEN, GREEN, True)
-    
+
+def get_distance_value(node:GraphNode, start:GraphNode, end:GraphNode) -> float:
+    dist_from_start = math.sqrt(abs(node.position[0] - start.position[0])**2 + abs(node.position[1] - start.position[1])**2)
+    dist_from_end = math.sqrt(abs(node.position[0] - end.position[0])**2 + abs(node.position[1] - end.position[1])**2)
+    return dist_from_end + dist_from_start  
 
 def A_star(screen:Surface, speed:int, start:GraphNode, end:GraphNode) -> None:
-    pass
+    in_queue = set([start])
+    priority_queue = [[start, get_distance_value(start, start, end)]]
+
+    while priority_queue:
+        # Get Node with Shortest Cost to Start in Queue
+        clock.tick(speed)
+        current_node, current_distance = priority_queue.pop(0)
+        path = generate_predecessor_path(current_node, start)
+        highlight_path(screen, path, (100, 50, 50), RED, False)
+        pygame.display.update()
+        highlight_path(screen, path, WHITE, WHITE, False)
+
+        # Check Neighbours
+        for connected_node, weight in current_node.edges:
+            if connected_node not in in_queue:
+                in_queue.add(connected_node)
+                connected_node.predecessor = current_node
+                if connected_node == end:
+                    path = generate_predecessor_path(end, start)
+                    highlight_path(screen, path, GREEN, GREEN, False)
+                    pygame.display.update()
+                    return None
+                priority_queue.append([connected_node, get_distance_value(connected_node, start, end)])
+        
+        check_user_input()
+        priority_queue.sort(key=lambda x:x[1])
 
 # Map from Menu Buttons to Functions and whether node values should be shown
 algorithms = {
@@ -209,7 +238,7 @@ algorithms = {
         "Depth First Search": (dfs, False),
         "Djkstra's": (djkstra, True),
         "Bellman Ford": (bellman_ford, True),
-        "A*": (A_star, True),
+        "A*": (A_star, False),
     }
 
 def visualise_graph(screen:Surface, algorithm:str, speed_slider:callable) -> None:
