@@ -42,6 +42,10 @@ VISUALISATIONS = {
         "Djkstra's",
         "Bellman Ford",
         "A*",
+    ],
+    "Hashmaps" : [
+        "Linear Probing",
+        "Quadratic Probing"
     ]
 }
 

@@ -3,6 +3,7 @@ import pygame, sys
 from sorting_algorithms.sorting_visualiser import run_sorting_algorithm
 from graphs.tree import visualise_tree
 from graphs.graph import visualise_graph
+from hashmaps.collision_resolution import visualise_hashmap
 from utils.components import Slider, VisualiseButton
 from pygame import Surface
 from utils.text import draw_multiline_text
@@ -47,6 +48,8 @@ def visualiser_select_screen(screen:Surface):
                 func = visualise_tree
             elif submenu == "Graph Traversals":
                 func = visualise_graph
+            elif submenu == "Hashmaps":
+                func = visualise_hashmap
             
             # New Button Row
             buttons.append([])

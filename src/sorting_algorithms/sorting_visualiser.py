@@ -344,9 +344,3 @@ def run_sorting_algorithm(user_screen:Surface, algorithm:str, speed_slider:calla
         
     except VisualisationAborted:
         print("Visualisation Aborted.")
-
-if __name__ == '__main__':
-    algorithm = ""
-    while algorithm.title() not in algorithms:
-        algorithm = input(f"Choose an Algorithm {list(algorithms.keys())}:")
-    run_sorting_algorithm(algorithm.title())

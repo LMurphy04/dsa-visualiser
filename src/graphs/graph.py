@@ -108,8 +108,9 @@ def bfs(screen:Surface, speed:int, start:GraphNode, end:GraphNode) -> None:
 
         check_user_input()
 
-def dfs(screen:Surface, speed:int, start:GraphNode, end:GraphNode, path:list[GraphNode]=None, visited:set[GraphNode]=set()) -> None:
+def dfs(screen:Surface, speed:int, start:GraphNode, end:GraphNode, path:list[GraphNode]=None, visited:set[GraphNode]=None) -> None:
     clock.tick(speed)
+    if visited == None: visited = set()
     if path == None: path = [start]
 
     # Check if End has Been Found and Highlight
