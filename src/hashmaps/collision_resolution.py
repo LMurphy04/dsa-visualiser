@@ -33,6 +33,10 @@ def draw_bucket(screen:Surface, colour:tuple[int, int, int], position:tuple[int,
 
 def draw_linked_list(screen:Surface, node:LinkedListNode, position:tuple[int, int], highlight_index:int=None) -> None:
     pygame.draw.rect(screen, NAVY, pygame.Rect(*position, SCREEN_SIZE[0], BUCKET_SIZE[1]))
+
+    if node is None: 
+        draw_bucket(screen, WHITE, position, None)
+        return None
     
     index = 0
     highlight_node = node if index == highlight_index else None

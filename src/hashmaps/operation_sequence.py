@@ -1,10 +1,10 @@
 # (Add, Key, Value), (Delete, Key), (Search, Key)
 OPERATIONS = [
-    ("Add", "a", 50),
-    ("Add", "p", 20),
-    ("Add", "dsfs", 40),
-    ("Add", "fsdih", 60),
-    ("Delete", "p"),
-    ("Search", "dsfs"),
-    ("Search", "ahfiuhf"),
+    ("Add", "Hello", 50),
+    ("Add", "Goodbye", 20),
+    ("Add", "Data", 40),
+    ("Add", "Algorithm", 60),
+    ("Delete", "Hello"),
+    ("Search", "Data"),
+    ("Search", "Error"),
 ]

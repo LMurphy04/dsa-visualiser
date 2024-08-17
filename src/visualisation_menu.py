@@ -84,7 +84,7 @@ def visualiser_select_screen(screen:Surface):
 
         # Title and Subtitle
         draw_multiline_text(screen, (BORDER, 10), "select a visual", 40, WHITE, True)
-        draw_multiline_text(screen, (BORDER, 40), "use arrow keys, wasd (and enter) or mouse to select", 20, WHITE, )
+        draw_multiline_text(screen, (BORDER, 40), "use arrows, wasd or mouse to select; use backspace to exit early", 20, WHITE, )
 
         # Speed Slider
         draw_multiline_text(screen, (BORDER, 70), "speed", 20, WHITE, True)
