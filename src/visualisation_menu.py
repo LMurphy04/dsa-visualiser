@@ -4,6 +4,7 @@ from sorting_algorithms.sorting_visualiser import run_sorting_algorithm
 from graphs.tree import visualise_tree
 from graphs.graph import visualise_graph
 from hashmaps.collision_resolution import visualise_hashmap
+from miscellaneous.binary_search import visualise_binary_search
 from utils.components import Slider, VisualiseButton
 from pygame import Surface
 from utils.text import draw_multiline_text
@@ -24,7 +25,7 @@ def visualiser_select_screen(screen:Surface):
     run = True
 
     # Slider for Visualisation Speed: screen, position, dimensions, value range, initial value
-    speed_slider = Slider(screen, (BORDER, 110), (600, 10), (10, 1000), 120)
+    speed_slider = Slider(screen, (BORDER, 90), (600, 10), (10, 1000), 120)
 
     def create_buttons(menu_pos: tuple[int, int]) -> tuple[list[tuple[str, int]], list[list[VisualiseButton]]]:
 
@@ -50,6 +51,8 @@ def visualiser_select_screen(screen:Surface):
                 func = visualise_graph
             elif submenu == "Hashmaps":
                 func = visualise_hashmap
+            elif submenu == "Miscellaneous":
+                func = visualise_binary_search
             
             # New Button Row
             buttons.append([])
@@ -72,7 +75,7 @@ def visualiser_select_screen(screen:Surface):
         return submenu_titles, buttons
     
     # Visualisation Buttons
-    menu_pos = (BORDER, 140)
+    menu_pos = (BORDER, 115)
     submenu_titles, buttons = create_buttons(menu_pos)
     active_row, active_col = 0, 0
 
@@ -81,10 +84,10 @@ def visualiser_select_screen(screen:Surface):
 
         # Title and Subtitle
         draw_multiline_text(screen, (BORDER, 10), "select a visual", 40, WHITE, True)
-        draw_multiline_text(screen, (BORDER, 50), "use arrow keys, wasd (and enter) or mouse to select", 20, WHITE, )
+        draw_multiline_text(screen, (BORDER, 40), "use arrow keys, wasd (and enter) or mouse to select", 20, WHITE, )
 
         # Speed Slider
-        draw_multiline_text(screen, (BORDER, 90), "speed", 20, WHITE, True)
+        draw_multiline_text(screen, (BORDER, 70), "speed", 20, WHITE, True)
         speed_slider.draw()
 
         # Submenu Titles
@@ -103,16 +106,10 @@ def visualiser_select_screen(screen:Surface):
     def change_active(direction:str, active_row:int, active_col:int) -> tuple[int, int]:
         
         if direction == "LEFT":
-            if active_col != 0: # Not at Left Edge of Row
-                return active_row, active_col - 1
-            elif active_row != 0: # Not at First Button
-                return active_row - 1, len(buttons[active_row - 1]) - 1
+            return active_row, (active_col - 1) % len(buttons[active_row])
 
         elif direction == "RIGHT":
-            if active_col != len(buttons[active_row]) - 1: # Not at Right Edge of Row
-                return active_row, active_col + 1
-            elif active_row != len(buttons) - 1: # Not at Last Button
-                return active_row + 1, 0
+            return active_row, (active_col + 1) % len(buttons[active_row])
 
         elif direction == "UP" and active_row != 0: # Not on First Row
             if active_col >= len(buttons[active_row - 1]): active_col = len(buttons[active_row - 1]) - 1 #Logic for if directly above button doesn't exist

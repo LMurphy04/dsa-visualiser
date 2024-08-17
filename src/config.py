@@ -48,7 +48,10 @@ VISUALISATIONS = {
         "Linear Probing",
         "Quadratic Probing",
         "Double Hashing",
-    ]
+    ],
+    "Miscellaneous" : [
+        "Binary Search",
+    ],
 }
 
 class VisualisationAborted(Exception): pass
