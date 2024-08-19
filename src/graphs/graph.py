@@ -5,8 +5,7 @@ from utils.components import GraphNode
 from utils.text import draw_multiline_text, centered_single_line
 from graphs.graph_structure import node_locations, edges
 
-# Initialise pygame
-pygame.init()
+# Initialise Clock
 clock = pygame.time.Clock()
 
 # Visualisation settings

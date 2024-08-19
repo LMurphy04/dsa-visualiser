@@ -14,20 +14,20 @@ GREY = (100, 100, 100)
 # Visualisations: { Submenu : [Visuals] }
 VISUALISATIONS = {
     "Sorting Algorithms" : [
-        "Bogo Sort",
-        "Cocktail Sort",
-        "Bubble Sort Up",
-        "Bubble Sort Down",
-        "Insertion Sort",
         "Selection Sort Max",
         "Selection Sort Min",
+        "Insertion Sort",
+        "Shell Sort",
+        "Bubble Sort Up",
+        "Bubble Sort Down",
+        "Cocktail Sort",        
         "Merge Sort",
         "Quick Sort",
-        "Radix Sort",
-        "Counting Sort",
-        "Shell Sort",
         "3-Way Quick Sort",
         "Heap Sort",
+        "Counting Sort",
+        "Radix Sort",
+        "Bogo Sort",
     ],
     "Binary Tree Traversals" : [
         "Inorder",

@@ -1,17 +1,18 @@
 import pygame, sys
 
-from sorting_algorithms.sorting_visualiser import run_sorting_algorithm
-from graphs.tree import visualise_tree
-from graphs.graph import visualise_graph
-from hashmaps.collision_resolution import visualise_hashmap
-from miscellaneous.binary_search import visualise_binary_search
 from utils.components import Slider, VisualiseButton
 from pygame import Surface
 from utils.text import draw_multiline_text
 from config import SCREEN_SIZE, NAVY, WHITE, RED, BORDER, VISUALISATIONS
 
-# Initialise pygame
-pygame.init()
+# Import Visualisations
+from sorting_algorithms.sorting_visualiser import run_sorting_algorithm
+from graphs.tree import visualise_tree
+from graphs.graph import visualise_graph
+from hashmaps.collision_resolution import visualise_hashmap
+from miscellaneous.binary_search import visualise_binary_search
+
+# Initialise clock
 clock = pygame.time.Clock()
 
 # Button Variables

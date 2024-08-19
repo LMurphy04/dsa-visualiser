@@ -2,8 +2,7 @@ import pygame, sys, random
 from pygame import Surface
 from config import SCREEN_SIZE, WHITE, NAVY, RED, GREEN, VisualisationAborted
 
-# Initialise pygame
-pygame.init()
+# Initialise Clock
 clock = pygame.time.Clock()
 
 unsorted_data = [36,45,81,40,12,75,77,48,52,49,78,17,33,98,38,42,2,86,59,85,94,20,53,60,67,9,29,89,37,21,88,57,100,10,1,64,51,8,18,35,70,41,84,5,80,63,96,72,13,83,23,71,50,69,11,79,14,66,65,73,22,54,19,43,58,74,4,15,97,6,7,26,87,39,68,82,28,99,76,31,3,90,93,16,46,30,56,91,92,34,55,47,32,95,44,61,27,62,24,25]
@@ -28,6 +27,7 @@ def render_bars(bar_data:list[int], highlight:set[int]=set(), highlight_colour:t
 
     pygame.display.update()
 
+# To Be Called Everytime a Comparison is Made (for speed control and visualisation)
 def comparison(bar_data:list[int]=None, highlight:set[int]=set(), highlight_colour:tuple[int, int, int]=RED) -> None:
     clock.tick(comparisons_per_second)
 

@@ -5,13 +5,12 @@ from utils.text import draw_multiline_text
 from utils.components import LinkedListNode
 from hashmaps.operation_sequence import OPERATIONS
 
-# Initialise pygame
-pygame.init()
+# Initialise Clock
 clock = pygame.time.Clock()
 
 # Hashmap Visualisation Variables
-SPEED_SCALE = 150
-HASHMAP_SIZE = 8
+SPEED_SCALE = 250
+HASHMAP_SIZE = 7
 INFORMATION_SIZE = 20
 BUCKET_SIZE = (150, (SCREEN_SIZE[1] - 2 * BORDER - 2 * INFORMATION_SIZE) // HASHMAP_SIZE)
 BUCKET_GAP = 2
@@ -89,7 +88,7 @@ def integer_hash(key:any) -> int:
     if isinstance(key, str): return sum(map(ord, key)) % HASHMAP_SIZE
 
 def polynomial_hash(key:any) -> int:
-    MULTIPLIER = 3
+    MULTIPLIER = 37
     if isinstance(key, str): return sum([ord(key) * (MULTIPLIER**index) for index, key in enumerate(key)]) % HASHMAP_SIZE
 
 # Probing Collision Resolution
@@ -100,8 +99,8 @@ def probing(screen:Surface, algorithm:str, speed:int, hashmap:list) -> None:
         return (value + increment) % HASHMAP_SIZE
 
     def quadratic_probing(value:int, increment:int) -> int:
-        C1, C2 = 5, 12
-        return (value + C1 + C2*((increment)**2)) % HASHMAP_SIZE
+        C1, C2 = 37, 61
+        return (value + C1*increment + C2*((increment)**2)) % HASHMAP_SIZE
     
     def double_hashing(value:int, increment:int) -> int:
         return (value + poly_hash_value * increment) % HASHMAP_SIZE
@@ -158,6 +157,8 @@ def probing(screen:Surface, algorithm:str, speed:int, hashmap:list) -> None:
 
         # Delete If Value Was Found
         if hashmap[check_index][0] != None:
+            clock.tick(speed)
+            highlight_box(screen, hashmap[check_index], check_index, 0)
             clock.tick(speed)
             hashmap[check_index] = DELETED
             highlight_box(screen, hashmap[check_index], check_index, 0)
@@ -258,6 +259,9 @@ def chaining(screen:Surface, speed:int, hashmap:list) -> None:
         
         # If Found, Delete
         else:
+            clock.tick(speed)
+            highlight_box(screen, node.value, index, depth)
+
             if node.prev: node.prev.next = node.next
             if node.next: node.next.prev = node.prev
             if hashmap[index] == node: hashmap[index] = node.next

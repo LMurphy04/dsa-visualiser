@@ -4,8 +4,7 @@ from pygame import Surface
 from config import VisualisationAborted, BORDER, WHITE, NAVY, GREY, RED, SCREEN_SIZE
 from utils.components import BinaryNode
 
-# Initialise pygame
-pygame.init()
+# Initialise Clock
 clock = pygame.time.Clock()
 
 # Tree and Node Properties
@@ -14,6 +13,7 @@ SPEED_SCALE = 35 # Frame Rate Adjustment as Speed Slider is Based on Sorting Alg
 NODE_SIZE = (SCREEN_SIZE[1] - 2 * BORDER) // (2**(DEPTH+1))
 X_OFFSET = SCREEN_SIZE[0] // 2 - BORDER
 Y_OFFSET = (SCREEN_SIZE[1] - 2 * BORDER - 2 * NODE_SIZE) // DEPTH
+counter = 1
 
 def build_tree(position:tuple[int, int], depth:int=0) -> BinaryNode:
     node = BinaryNode(position, NODE_SIZE)
@@ -25,8 +25,18 @@ def build_tree(position:tuple[int, int], depth:int=0) -> BinaryNode:
 root_position = (SCREEN_SIZE[0] // 2, BORDER + NODE_SIZE)
 root = build_tree(root_position)
 
+def reset_values(node:BinaryNode=root) -> None:
+    node.value = None
+    if node.left: reset_values(node.left)
+    if node.right: reset_values(node.right)
+
 def initial_render(screen:Surface) -> None:
     screen.fill(NAVY)
+
+    # Reset Counter Values
+    global counter
+    counter = 1
+    reset_values()
 
     def render_tree(node:BinaryNode = root) -> None:
         if node.left:
@@ -41,7 +51,11 @@ def initial_render(screen:Surface) -> None:
     pygame.display.update()
 
 def flag(screen:Surface, speed:int, node:BinaryNode) -> None:
+    global counter
     clock.tick(speed)
+
+    node.value = counter
+    counter += 1
 
     # Flag Node
     node.draw(screen, RED)
@@ -129,5 +143,6 @@ def visualise_tree(screen:Surface, algorithm:str, speed_slider:callable) -> None
     try:
         algorithms[algorithm](screen, speed)
         pygame.display.update()
+        pygame.time.delay(3000)
     except VisualisationAborted:
         print("Visualisation Aborted.")

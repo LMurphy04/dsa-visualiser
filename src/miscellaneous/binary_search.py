@@ -3,8 +3,7 @@ from pygame import Surface
 from config import VisualisationAborted, WHITE, NAVY, GREY, RED, SCREEN_SIZE, BORDER, BLACK
 from utils.text import draw_multiline_text, centered_single_line
 
-# Initialise pygame
-pygame.init()
+# Initialise Clock
 clock = pygame.time.Clock()
 
 # Visualisation Variables
