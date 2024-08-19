@@ -8,7 +8,7 @@
 
 1. Download the files from this GitHub repository
 2. Ensure you have Python downloaded along with the required dependencies (found in requirements.txt)
-3. Run the project through src/main.pyw
+3. Run the project through src/main.py
 4. Enjoy!
 
 ## Included Visualisations
