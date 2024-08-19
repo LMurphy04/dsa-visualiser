@@ -3,9 +3,9 @@
 > A Data Structures and Algorithms Visualisation Tool
 
 ## How to Install and Run
-1. Download the src folder
-2. Ensure you have Python installed
-3. Run the main.py file
+1. Download the files from this GitHub repository
+2. Ensure you have Python downloaded along with the required dependencies (found in requirements.txt)
+3. Run the project through src/main.py
 4. Enjoy!
 
 ## Included Visualisations
