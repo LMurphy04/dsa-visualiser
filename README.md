@@ -56,3 +56,4 @@
 **Miscellaneous**
 
 1. Binary Search
+2. Red Black Trees

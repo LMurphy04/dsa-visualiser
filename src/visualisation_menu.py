@@ -11,6 +11,7 @@ from graphs.tree import visualise_tree
 from graphs.graph import visualise_graph
 from hashmaps.collision_resolution import visualise_hashmap
 from miscellaneous.binary_search import visualise_binary_search
+from graphs.red_black_tree import visualise_red_black_tree
 
 # Initialise clock
 clock = pygame.time.Clock()
@@ -42,6 +43,7 @@ def visualiser_select_screen(screen:Surface):
             # Submenu Title
             submenu_titles.append((submenu, y))
             y += SUBMENU_TITLE_SIZE + BUTTON_GAP
+            misc = False
 
             # Button Logic
             if submenu == "Sorting Algorithms":
@@ -53,18 +55,25 @@ def visualiser_select_screen(screen:Surface):
             elif submenu == "Hashmaps":
                 func = visualise_hashmap
             elif submenu == "Miscellaneous":
-                func = visualise_binary_search
+                misc = True
             
             # New Button Row
             buttons.append([])
 
             for visual in visuals:
+                if misc:
+                    if visual == "Binary Search":
+                        func = visualise_binary_search
+                    elif visual == "Red Black Tree":
+                        func = visualise_red_black_tree
+                
                 if x > EDGE_OF_MENU - BUTTON_SIZE[0]:
                     # Newline
                     x = menu_pos[0]
                     y += BUTTON_SIZE[1] + BUTTON_GAP
                     current_row += 1
                     buttons.append([])
+                    
                 buttons[current_row].append(VisualiseButton(screen, (x, y), BUTTON_SIZE, visual, func, [screen, visual, speed_slider.get_val]))
                 x += BUTTON_SIZE[0] + BUTTON_GAP
             

@@ -63,6 +63,19 @@ class BinaryNode():
         pygame.draw.circle(screen, colour, self.position, self.radius)
         if self.value: centered_single_line(screen, self.position, str(self.value), self.radius, BLACK)
 
+class RedBlackBinaryNode():
+    
+    def __init__(self, value:int) -> None:
+        self.parent = None
+        self.left = None
+        self.right = None
+        self.value = value
+        self.colour = RED
+
+    def draw(self, screen:Surface, position:tuple[int, int], radius:int) -> None:
+        pygame.draw.circle(screen, self.colour, position, radius)
+        if self.value: centered_single_line(screen, position, str(self.value), radius, WHITE)
+
 class GraphNode():
     
     def __init__(self, position:tuple[int, int], radius:int) -> None:

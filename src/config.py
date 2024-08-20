@@ -51,6 +51,7 @@ VISUALISATIONS = {
     ],
     "Miscellaneous" : [
         "Binary Search",
+        "Red Black Tree",
     ],
 }
 
